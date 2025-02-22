@@ -2,7 +2,7 @@ package commands
 
 import "fmt"
 
-type CommanderFunc func() error
+type CommanderFunc func(args []string) error
 
 type Command struct {
 	Name        string
@@ -27,12 +27,12 @@ func (c *Commandeer) RegisterCommand(command Command) {
 	c.commands[command.Name] = command
 }
 
-func (c *Commandeer) ExecuteCommand(name string) error {
+func (c *Commandeer) ExecuteCommand(name string, args []string) error {
 	command, exists := c.commands[name]
 	if !exists {
 		return fmt.Errorf("command %s not found", name)
 	}
-	if err := command.Handler(); err != nil {
+	if err := command.Handler(args); err != nil {
 		return err
 	}
 	return nil
@@ -50,7 +50,7 @@ func (c *Commandeer) RegisterHelpCommand() {
 	c.RegisterCommand(Command{
 		Name:        "help",
 		Description: "manual",
-		Handler: func() error {
+		Handler: func(args []string) error {
 			c.ShowUsage()
 			return nil
 		},

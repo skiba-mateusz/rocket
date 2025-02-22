@@ -2,7 +2,7 @@ package commands
 
 import "fmt"
 
-func Ping() error {
+func PingCommand(args []string) error {
 	fmt.Println("Pong")
 	return nil
 }

@@ -8,10 +8,16 @@ import (
 
 func main() {
 	commandeer := commands.NewCommandeer()
+
+	commandeer.RegisterCommand(commands.Command{
+		Name:        "init",
+		Description: "initialize rocket project",
+		Handler:     commands.InitCommand,
+	})
 	commandeer.RegisterCommand(commands.Command{
 		Name:        "ping",
 		Description: "See if that works",
-		Handler:     commands.Ping,
+		Handler:     commands.PingCommand,
 	})
 	commandeer.RegisterHelpCommand()
 
@@ -21,8 +27,9 @@ func main() {
 	}
 
 	cmd := os.Args[1]
+	args := os.Args[2:]
 
-	if err := commandeer.ExecuteCommand(cmd); err != nil {
+	if err := commandeer.ExecuteCommand(cmd, args); err != nil {
 		log.Fatalf("Error executing command: %v", err)
 	}
 }

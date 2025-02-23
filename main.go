@@ -15,6 +15,11 @@ func main() {
 		Handler:     commands.InitCommand,
 	})
 	commandeer.RegisterCommand(commands.Command{
+		Name:        "add",
+		Description: "add a new content page",
+		Handler:     commands.AddCommand,
+	})
+	commandeer.RegisterCommand(commands.Command{
 		Name:        "ping",
 		Description: "See if that works",
 		Handler:     commands.PingCommand,

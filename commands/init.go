@@ -2,8 +2,8 @@ package commands
 
 import (
 	"fmt"
+	"github.com/skiba-mateusz/rocket/skeletons"
 	"os"
-	"path/filepath"
 )
 
 func InitCommand(args []string) error {
@@ -21,23 +21,8 @@ func InitCommand(args []string) error {
 		return fmt.Errorf("failed to create project: %v", err)
 	}
 
-	dirs := []string{"content", "layout", "static"}
-
-	for _, dir := range dirs {
-		path := filepath.Join(rootDir, dir)
-		if err := os.MkdirAll(path, 0755); err != nil {
-			return fmt.Errorf("failed to create directory %s: %v", path, err)
-		}
-	}
-
-	configPath := filepath.Join(rootDir, "config.toml")
-	defaultConfig := `[site]
-title = "My Site"
-baseURL = "http://example.com"
-	`
-
-	if err := os.WriteFile(configPath, []byte(defaultConfig), 0644); err != nil {
-		return fmt.Errorf("failed to write config file %v", err)
+	if err := skeletons.CreateProject(rootDir); err != nil {
+		return fmt.Errorf("failed to create project: %v", err)
 	}
 
 	fmt.Printf("Project %s initialized successfully\n", rootDir)

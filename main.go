@@ -20,6 +20,11 @@ func main() {
 		Handler:     commands.AddCommand,
 	})
 	commandeer.RegisterCommand(commands.Command{
+		Name:        "serve",
+		Description: "serve files",
+		Handler:     commands.ServeCommand,
+	})
+	commandeer.RegisterCommand(commands.Command{
 		Name:        "ping",
 		Description: "See if that works",
 		Handler:     commands.PingCommand,

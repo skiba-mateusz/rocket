@@ -1,45 +1,22 @@
 package main
 
 import (
-	"github.com/skiba-mateusz/rocket/commands"
+	"github.com/skiba-mateusz/rocket/cmd"
+	"github.com/skiba-mateusz/rocket/commandeer"
 	"log"
 	"os"
 )
 
 func main() {
-	commandeer := commands.NewCommandeer()
+	cmdr := commandeer.NewCommandeer()
 
-	commandeer.RegisterCommand(commands.Command{
-		Name:        "init",
-		Description: "initialize rocket project",
-		Handler:     commands.InitCommand,
-	})
-	commandeer.RegisterCommand(commands.Command{
-		Name:        "add",
-		Description: "add a new content page",
-		Handler:     commands.AddCommand,
-	})
-	commandeer.RegisterCommand(commands.Command{
-		Name:        "serve",
-		Description: "serve files",
-		Handler:     commands.ServeCommand,
-	})
-	commandeer.RegisterCommand(commands.Command{
-		Name:        "ping",
-		Description: "See if that works",
-		Handler:     commands.PingCommand,
-	})
-	commandeer.RegisterHelpCommand()
+	cmdr.RegisterCommand(cmd.InitCommand())
+	cmdr.RegisterCommand(cmd.AddCommand())
+	cmdr.RegisterCommand(cmd.ServeCommand())
+	cmdr.RegisterCommand(cmd.PingCommand())
+	cmdr.RegisterHelpCommand()
 
-	if len(os.Args) < 2 {
-		commandeer.ShowUsage()
-		return
-	}
-
-	cmd := os.Args[1]
-	args := os.Args[2:]
-
-	if err := commandeer.ExecuteCommand(cmd, args); err != nil {
+	if err := cmdr.ExecuteCommand(os.Args); err != nil {
 		log.Fatalf("Error executing command: %v", err)
 	}
 }

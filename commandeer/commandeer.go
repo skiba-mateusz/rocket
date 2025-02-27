@@ -26,7 +26,8 @@ func NewCommandeer() *Commandeer {
 
 func (c *Commandeer) RegisterCommand(command *Command) {
 	if _, exists := c.commands[command.Name]; exists {
-		fmt.Printf("command %s already exists", command.Name)
+		fmt.Printf("command %s already exists\n", command.Name)
+		return
 	}
 	c.commands[command.Name] = command
 }

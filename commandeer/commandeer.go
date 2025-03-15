@@ -1,15 +1,17 @@
 package commandeer
 
 import (
+	"flag"
 	"fmt"
 )
 
-type CommandHandler func(args []string) error
+type CommandHandler func(command *Command, args []string) error
 
 type Command struct {
 	Name        string
 	Description string
 	Handler     CommandHandler
+	flags       *Flags
 }
 
 type Commandeer struct {
@@ -34,7 +36,7 @@ func (c *Commandeer) RegisterHelpCommand() {
 	c.RegisterCommand(&Command{
 		Name:        "help",
 		Description: "Show usage information and available commands",
-		Handler: func(args []string) error {
+		Handler: func(cmd *Command, args []string) error {
 			c.showUsage()
 			return nil
 		},
@@ -53,7 +55,13 @@ func (c *Commandeer) ExecuteCommand(args []string) error {
 		return fmt.Errorf("command '%s' not found", name)
 	}
 
-	if err := command.Handler(args[2:]); err != nil {
+	if command.flags != nil {
+		if err := command.flags.Parse(args[2:]); err != nil {
+			return err
+		}
+	}
+
+	if err := command.Handler(command, args[2:]); err != nil {
 		return err
 	}
 
@@ -61,9 +69,15 @@ func (c *Commandeer) ExecuteCommand(args []string) error {
 }
 
 func (c *Commandeer) showUsage() {
-	fmt.Println("🚀 Usage: rocket <command> [arguments]")
+	fmt.Println("🚀 Usage: rocket <command> [arguments] [flags]")
 	fmt.Println("\nAvailable commands:")
 	for _, command := range c.commands {
 		fmt.Printf("  %-15s %s\n", command.Name, command.Description)
+		if command.flags != nil {
+			command.flags.FlagSet.VisitAll(func(flag *flag.Flag) {
+				fmt.Printf("    -%-15s %s (default %s)\n", flag.Name, flag.Usage, flag.DefValue)
+			})
+		}
+		fmt.Println()
 	}
 }

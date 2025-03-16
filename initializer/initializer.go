@@ -61,7 +61,7 @@ func (i *Initializer) handleEmbeddedFile(rootDir, path string, d fs.DirEntry) er
 
 	content, err := defaultsFS.ReadFile(path)
 	if err != nil {
-		return fmt.Errorf("failed to read embedded file %s: %v", err)
+		return fmt.Errorf("failed to read embedded file %s: %v", path, err)
 	}
 
 	outputPath := i.mapEmbeddedPathToOutput(rootDir, path)

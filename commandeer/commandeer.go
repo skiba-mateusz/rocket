@@ -72,12 +72,19 @@ func (c *Commandeer) showUsage() {
 	fmt.Println("🚀 Usage: rocket <command> [arguments] [flags]")
 	fmt.Println("\nAvailable commands:")
 	for _, command := range c.commands {
+		if command.Name == "help" {
+			continue
+		}
+
 		fmt.Printf("  %-15s %s\n", command.Name, command.Description)
 		if command.flags != nil {
 			command.flags.FlagSet.VisitAll(func(flag *flag.Flag) {
 				fmt.Printf("    -%-15s %s (default %s)\n", flag.Name, flag.Usage, flag.DefValue)
 			})
 		}
-		fmt.Println()
+	}
+
+	if helpCommand, exists := c.commands["help"]; exists {
+		fmt.Printf("  %-15s %s\n", helpCommand.Name, helpCommand.Description)
 	}
 }

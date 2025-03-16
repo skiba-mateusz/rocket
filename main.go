@@ -9,8 +9,9 @@ import (
 
 func main() {
 	cmdr := commandeer.NewCommandeer()
-	
+
 	cmdr.RegisterCommand(cmd.NewInitCommand())
+	cmdr.RegisterCommand(cmd.NewAddCommand())
 	cmdr.RegisterHelpCommand()
 
 	if err := cmdr.ExecuteCommand(os.Args); err != nil {

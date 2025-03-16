@@ -37,8 +37,8 @@ func NewPage(contentDir, path string) error {
 }
 
 func generateFrontMatter(contentDir, path string) (string, error) {
-	title := strings.TrimSuffix(filepath.Base(path), filepath.Ext(path))
-	url := strings.TrimPrefix(strings.TrimSuffix(path, filepath.Ext(path)), contentDir)
+	title := extractTitle(path)
+	url := extractUrl(contentDir, path)
 	currentDate := time.Now().Format(time.RFC3339)
 
 	fm := FrontMatter{
@@ -49,11 +49,19 @@ func generateFrontMatter(contentDir, path string) (string, error) {
 	}
 
 	var builder strings.Builder
-	builder.WriteString("---\n")
+	builder.WriteString("+++\n")
 	if err := toml.NewEncoder(&builder).Encode(fm); err != nil {
 		return "", fmt.Errorf("failed to encode front matter: %v", err)
 	}
-	builder.WriteString("---\n")
+	builder.WriteString("+++\n")
 
 	return builder.String(), nil
+}
+
+func extractTitle(path string) string {
+	return strings.TrimSuffix(filepath.Base(path), filepath.Ext(path))
+}
+
+func extractUrl(contentDir, path string) string {
+	return strings.TrimPrefix(strings.TrimSuffix(path, filepath.Ext(path)), contentDir)
 }

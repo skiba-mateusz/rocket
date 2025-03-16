@@ -8,6 +8,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 )
 
 //go:embed defaults/*
@@ -63,6 +64,9 @@ func (i *Initializer) handleEmbeddedFile(rootDir, path string, d fs.DirEntry) er
 	if err != nil {
 		return fmt.Errorf("failed to read embedded file %s: %v", path, err)
 	}
+
+	currentDate := time.Now().Format(time.RFC3339)
+	content = []byte(strings.ReplaceAll(string(content), "{{DATE}}", currentDate))
 
 	outputPath := i.mapEmbeddedPathToOutput(rootDir, path)
 	outputPathDir := filepath.Dir(outputPath)

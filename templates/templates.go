@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"github.com/skiba-mateusz/rocket/config"
 	"html/template"
 	"os"
 	"path/filepath"
@@ -14,6 +15,7 @@ type Engine interface {
 }
 
 type GoTemplateEngine struct {
+	config       *config.Config
 	templates    *template.Template
 	templatesDir string
 }

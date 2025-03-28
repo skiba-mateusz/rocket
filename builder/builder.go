@@ -2,6 +2,7 @@ package builder
 
 import (
 	"fmt"
+	"github.com/skiba-mateusz/rocket/config"
 	"github.com/skiba-mateusz/rocket/content"
 	"github.com/skiba-mateusz/rocket/logger"
 	"github.com/skiba-mateusz/rocket/templates"
@@ -18,6 +19,7 @@ const (
 )
 
 type Builder struct {
+	config          *config.Config
 	parser          content.Parser
 	logger          logger.Logger
 	engine          templates.Engine
@@ -27,8 +29,9 @@ type Builder struct {
 	successfulPages int
 }
 
-func NewBuilder(logger logger.Logger, parser content.Parser, engine templates.Engine, publicDir, contentDir string) *Builder {
+func NewBuilder(config *config.Config, logger logger.Logger, parser content.Parser, engine templates.Engine, publicDir, contentDir string) *Builder {
 	return &Builder{
+		config:          config,
 		parser:          parser,
 		logger:          logger,
 		engine:          engine,
@@ -91,7 +94,15 @@ func (b *Builder) buildPage(page *content.Page) error {
 		filepath.Join(customTemplatesDir, page.Layout),
 	}
 
-	output, err := b.engine.Render(customTemplates, "base.html", page)
+	data := struct {
+		Config *config.Config
+		Page   *content.Page
+	}{
+		Config: b.config,
+		Page:   page,
+	}
+
+	output, err := b.engine.Render(customTemplates, "base.html", data)
 	if err != nil {
 		return fmt.Errorf("failed to render page: %v", err)
 	}

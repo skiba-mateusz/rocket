@@ -1,6 +1,6 @@
 +++
 title = "Home Page"
-url = "/blogs"
+url = "/"
 date = "{{DATE}}"
 layout = "single.html"
 +++

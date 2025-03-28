@@ -15,7 +15,8 @@ func NewAddCommand() *commandeer.Command {
 			log := logger.NewDefaultLogger(logger.INFO)
 			_, err := config.LoadConfig()
 			if err != nil {
-				return err
+				log.Error("%v", err)
+				return nil
 			}
 
 			if len(args) == 0 {
@@ -28,7 +29,8 @@ func NewAddCommand() *commandeer.Command {
 			log.Info("Adding new content page: '%s'", path)
 
 			if err = content.NewPage("content", path); err != nil {
-				return err
+				log.Error("%v", err)
+				return nil
 			}
 
 			log.Success("Page '%s' added successfully", path)

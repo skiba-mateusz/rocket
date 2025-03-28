@@ -28,6 +28,10 @@ func NewPage(contentDir, path string) error {
 	fullPath := filepath.Join(contentDir, path)
 	pathDir := filepath.Dir(fullPath)
 
+	if info, _ := os.Stat(fullPath); info != nil {
+		return fmt.Errorf("file %s already exists", path)
+	}
+
 	if err := os.MkdirAll(pathDir, 0755); err != nil {
 		return fmt.Errorf("failed to create directory %s: %v", pathDir, err)
 	}

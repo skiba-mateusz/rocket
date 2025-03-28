@@ -3,17 +3,25 @@ package content
 import (
 	"fmt"
 	"github.com/BurntSushi/toml"
+	"html/template"
 	"os"
 	"path/filepath"
 	"strings"
 	"time"
 )
 
+type Page struct {
+	FrontMatter
+	Content  template.HTML
+	Filename string
+}
+
 type FrontMatter struct {
-	Title  string `toml:"title"`
-	Url    string `toml:"url"`
-	Date   string `toml:"date"`
-	Layout string `toml:"layout"`
+	Title  string                 `toml:"title"`
+	Url    string                 `toml:"url"`
+	Date   string                 `toml:"date"`
+	Layout string                 `toml:"layout"`
+	Params map[string]interface{} `toml:"params"`
 }
 
 func NewPage(contentDir, path string) error {

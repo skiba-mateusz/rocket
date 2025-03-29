@@ -9,25 +9,31 @@ import (
 func NewServeCommand() *commandeer.Command {
 	cmd := &commandeer.Command{
 		Name:        "serve",
-		Description: "Serve files from public directory",
+		Description: "Serve build files",
 		Handler: func(command *commandeer.Command, args []string) error {
 			log := logger.NewDefaultLogger(logger.INFO)
 
 			port, err := command.Flags().GetInteger("port")
 			if err != nil {
-				log.Error("%v", err)
+				log.Error(err.Error())
+				return nil
 			}
 
-			srv := server.NewServer(log, port)
+			srv, err := server.NewServer(log, port, "public")
+			if err != nil {
+				log.Error(err.Error())
+				return nil
+			}
+
 			if err = srv.Run(); err != nil {
-				log.Error("%v", err)
+				log.Error(err.Error())
 			}
 
 			return nil
 		},
 	}
 
-	cmd.Flags().Integer("port", "specify port for server", 8080)
+	cmd.Flags().Integer("port", "Specify port for server", 8080)
 
 	return cmd
 }
